@@ -40,7 +40,6 @@ body {
   justify-content: center;
   color: #fff;
   text-align: center;
-  margin-top: 15rem;
 }
 
 .header-title {
@@ -130,7 +129,7 @@ h2 span {
   display: flex;
   place-content: center;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   flex: 0 0 auto;
   flex-flow: row nowrap;
   gap: 12px;
@@ -240,9 +239,12 @@ h2 span {
   transition: all 0.2s ease-in-out;
 }
 
-.grow:hover,
-.generate-button:hover {
+.grow:hover {
   transform: scale(1.1);
+}
+
+.generate-button:hover {
+  background-color: rebeccapurple;
 }
 
 .output-content {
@@ -253,6 +255,7 @@ h2 span {
   flex-direction: column;
   flex-shrink: 0;
   transform: none;
+  margin-top: 1.5rem;
 }
 
 .output-content img {
@@ -272,13 +275,13 @@ h2 span {
     justify-content: center;
     max-width: 700px;
     width: 100%;
-    height: 100%;
-    /* padding: 50px; */
+    padding: 80px;
   }
 
   .prompt-container {
     max-width: 600px;
     width: 100%;
+    margin-inline: 1rem;
   }
 
   .output-content {

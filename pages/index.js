@@ -4,7 +4,9 @@ import Image from "next/image";
 import buildspaceLogo from "../assets/buildspace-logo.png";
 
 const Home = () => {
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState(
+    "Protrait of jen in Batman, highly detailed digital painting, artstation, concept art, smooth, sharp focus, illustration, art by Bob Kane, Wailliam Klein and William Eggleston.",
+  );
   const [img, setImg] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
 
@@ -14,9 +16,9 @@ const Home = () => {
 
   const [finalPropmt, setFinalPropmt] = useState("");
 
-  const generateAction = async (e) => {
-    e.preventDefault();
+  const generateAction = async () => {
     if (!input.length || input.length < 6) return;
+    if (isGenerating && retry === 0) return;
 
     console.log("Generating...");
     setIsGenerating(true);
@@ -45,13 +47,12 @@ const Home = () => {
 
       if (!response.ok) {
         console.log(`Error: ${data.error}`);
-        setIsGenerating(gsldr);
+        setIsGenerating(false);
         return;
       }
 
       setFinalPropmt(input);
       setInput("");
-
       setImg(data.image);
       setIsGenerating(false);
     } catch (error) {
@@ -60,7 +61,7 @@ const Home = () => {
     }
   };
 
-  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve.ms));
+  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   useEffect(() => {
     const runRetry = async () => {
@@ -69,6 +70,7 @@ const Home = () => {
           `Model still loading after {maxRetries} retries. Try request again in 5 minutes`,
         );
         setRetryCount(maxRetries);
+        setIsGenerating(false);
         return;
       }
       console.log(`Trying again in ${retry} seconds`);
@@ -85,12 +87,12 @@ const Home = () => {
   return (
     <div className="root">
       <Head>
-        <title>Silly picture generator | buildspace</title>
+        <title>AI picture generator | buildspace</title>
       </Head>
       <div className="container">
         <div className="header">
           <div className="header-title">
-            <h1>Silly picture generator</h1>
+            <h1>AI picture generator</h1>
           </div>
           <div className="header-subtitle">
             <h2>
@@ -98,7 +100,7 @@ const Home = () => {
               <span> jen </span>in the prompt
             </h2>
           </div>
-          <form className="prompt-container" onSubmit={generateAction}>
+          <div className="prompt-container">
             <input
               type="text"
               className="prompt-box"
@@ -106,11 +108,12 @@ const Home = () => {
               onChange={(e) => setInput(e.target.value)}
             />
 
-            <div className="prompt-button">
-              <button
+            <div className="prompt-buttons">
+              <a
                 className={
                   isGenerating ? "generate-button loading" : "generate-button"
                 }
+                onClick={generateAction}
               >
                 <div className="generate">
                   {isGenerating ? (
@@ -119,9 +122,9 @@ const Home = () => {
                     <p>Generate</p>
                   )}
                 </div>
-              </button>
+              </a>
             </div>
-          </form>
+          </div>
         </div>
         {img && (
           <div className="output-content">
